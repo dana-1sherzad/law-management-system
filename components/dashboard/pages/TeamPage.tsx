@@ -35,7 +35,11 @@ const initialTeam: TeamMember[] = [
   { id: 'M-004', name: 'لینا جەمال', role: 'Secretariat', position: 'سکرتێر', email: 'lina@lawfirm.com', phone: '0751 555 6677', branch: 'سلێمانی', activeCases: 0, status: 'On Leave' },
 ];
 
-const TeamPage: React.FC = () => {
+interface TeamPageProps {
+  onViewProfile: (id: string) => void;
+}
+
+const TeamPage: React.FC<TeamPageProps> = ({ onViewProfile }) => {
   const [team] = useState(initialTeam);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -150,7 +154,10 @@ const TeamPage: React.FC = () => {
                       <Briefcase className="w-4 h-4 text-gray-400" />
                       <span className="text-xs font-bold text-text-main">{member.activeCases} کەیسی چالاک</span>
                    </div>
-                   <button className="flex items-center gap-1.5 text-[10px] font-bold text-brand-primary uppercase tracking-widest hover:underline">
+                   <button 
+                    onClick={() => onViewProfile(member.id)}
+                    className="flex items-center gap-1.5 text-[10px] font-bold text-brand-primary uppercase tracking-widest hover:underline"
+                   >
                       پرۆفایل
                       <ExternalLink className="w-3 h-3" />
                    </button>
