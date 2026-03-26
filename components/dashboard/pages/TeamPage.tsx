@@ -15,6 +15,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../../lib/utils';
 import type { UserRole } from '../../Dashboard';
+import AddTeamMemberModal from '../shared/AddTeamMemberModal';
 
 interface TeamMember {
   id: string;
@@ -40,8 +41,13 @@ interface TeamPageProps {
 }
 
 const TeamPage: React.FC<TeamPageProps> = ({ onViewProfile }) => {
-  const [team] = useState(initialTeam);
+  const [team, setTeam] = useState<TeamMember[]>(initialTeam);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddMember = (newMember: TeamMember) => {
+    setTeam(prev => [newMember, ...prev]);
+  };
 
   const filteredTeam = team.filter(member => 
     member.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -56,11 +62,20 @@ const TeamPage: React.FC<TeamPageProps> = ({ onViewProfile }) => {
           <h1 className="text-2xl md:text-3xl text-text-main font-bold tracking-tight">تیم و کارمەندان</h1>
           <p className="text-text-muted mt-1 text-sm font-medium">بەڕێوەبردنی ئەندامانی تیم و دەسەڵاتەکانیان.</p>
         </div>
-        <button className="flex items-center bg-brand-accent text-white font-bold px-6 py-3 rounded hover:bg-blue-700 transition-all shadow-sm active:scale-95 text-sm">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center bg-brand-accent text-white font-bold px-6 py-3 rounded hover:bg-blue-700 transition-all shadow-sm active:scale-95 text-sm"
+        >
           <UserPlus className="w-4 h-4 ml-2" />
           <span>زیادکردنی ئەندام</span>
         </button>
       </div>
+
+      <AddTeamMemberModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onAdd={handleAddMember} 
+      />
 
       {/* Search & Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
